@@ -13,9 +13,22 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
+/**
+ * 2018年3月1日 22:27:35 添加数据mock
+ */
+const express = require('express')
+const app = express()
+var appData = require('../data.json')
+var seller = appData.seller
+var goods = appData.goods
+var ratings = appData.ratings
+var apiRoutes = express.Router()
+app.use('/api', apiRoutes)
+// end
+
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
+    rules: utils.styleLoaders({sourceMap: config.dev.cssSourceMap, usePostCSS: true})
   },
   // cheap-module-eval-source-map is faster for development
   devtool: config.dev.devtool,
@@ -25,7 +38,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
+        {from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html')},
       ],
     },
     hot: true,
@@ -34,14 +47,38 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     host: HOST || config.dev.host,
     port: PORT || config.dev.port,
     open: config.dev.autoOpenBrowser,
-    overlay: config.dev.errorOverlay
-      ? { warnings: false, errors: true }
-      : false,
+    overlay: config.dev.errorOverlay ? {warnings: false, errors: true} : false,
     publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+    /**
+     * 2018年3月1日 22:29:09 数据mock
+     */
+    before(app) {
+      app.get('/api/seller', (req, res) => {
+        res.json({
+          // 这里是你的json内容
+          code: 0,
+          data: seller
+        })
+      }),
+        app.get('/api/goods', (req, res) => {
+          res.json({
+            // 这里是你的json内容
+            code: 0,
+            data: goods
+          })
+        }),
+        app.get('/api/ratings', (req, res) => {
+          res.json({
+            // 这里是你的json内容
+            code: 0,
+            data: ratings
+          })
+        })
     }
   },
   plugins: [
@@ -58,13 +95,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       inject: true
     }),
     // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static'),
-        to: config.dev.assetsSubDirectory,
-        ignore: ['.*']
-      }
-    ])
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, '../static'),
+      to: config.dev.assetsSubDirectory,
+      ignore: ['.*']
+    }])
   ]
 })
 
@@ -84,9 +119,8 @@ module.exports = new Promise((resolve, reject) => {
         compilationSuccessInfo: {
           messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
         },
-        onErrors: config.dev.notifyOnErrors
-        ? utils.createNotifierCallback()
-        : undefined
+        onErrors: config.dev.notifyOnErrors ?
+          utils.createNotifierCallback() : undefined
       }))
 
       resolve(devWebpackConfig)
