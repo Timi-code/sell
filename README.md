@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # myapp
 
 > A Vue.js project
@@ -23,4 +22,3 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 =======
 # sell
 VUE2.0 sell practice
->>>>>>> 6ce77b40eee25faf3d6b2c6f0c3aad773c8b0800
