@@ -17,12 +17,15 @@
 </template>
 
 <script>
-  import header from 'components/header/header'
+  import header from 'components/header/vHeader'
 
   export default {
     name: 'App',
     components: {
       'v-header': header
+    },
+    mounted() {
+      this.$store.dispatch('getGoods')
     }
   }
 </script>
